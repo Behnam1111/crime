@@ -19,10 +19,15 @@ def get_data(crime_type: Optional[str] = None, crime_date: Optional[date] = None
     return response_dataframe
 
 
+@st.cache
+def get_options():
+    return get_data().primary_type.unique()
+
+
 def main():
     st.title(RuntimeConfig.dashboard_name)
     crime_type_value = st.sidebar.multiselect(label='Select crime type:',
-                                              options=get_data().primary_type.unique())
+                                              options=get_options())
 
     crime_date_value = st.sidebar.date_input(label='Pick a Date')
     crime_date_checkbox = st.sidebar.checkbox(label='Filter by date')
