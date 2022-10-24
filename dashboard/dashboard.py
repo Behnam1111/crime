@@ -5,6 +5,7 @@ import pandas as pd
 import pydeck as pdk
 import requests
 import streamlit as st
+from streamlit.errors import StreamlitAPIException
 
 from config.runtime_config import RuntimeConfig
 
@@ -29,23 +30,24 @@ def main():
         crime_date_filter = crime_date_value
     else:
         crime_date_filter = None
+    try:
+        layer = pdk.Layer(
+            "ScatterplotLayer",
+            data=get_data(crime_type=crime_type_value, crime_date=crime_date_filter),
+            get_position=["longitude", "latitude"],
+            get_color=[200, 30, 0, 160],
+            get_radius=800,
+            radius_scale=0.05,
+        )
+        view_state = pdk.ViewState(latitude=41.87, longitude=-87.62, zoom=11, bearing=0, pitch=45)
 
-    st.write(get_data(crime_type=crime_type_value, crime_date=crime_date_filter))
-    layer = pdk.Layer(
-        "ScatterplotLayer",
-        data=get_data(crime_type=crime_type_value, crime_date=crime_date_filter),
-        get_position=["longitude", "latitude"],
-        get_color=[200, 30, 0, 160],
-        get_radius=1500,
-        radius_scale=0.05,
-    )
-    view_state = pdk.ViewState(latitude=41.87, longitude=-87.62, zoom=11, bearing=0, pitch=45)
-
-    r = pdk.Deck(
-        layers=[layer],
-        initial_view_state=view_state,
-    )
-    st.pydeck_chart(r)
+        r = pdk.Deck(
+            layers=[layer],
+            initial_view_state=view_state,
+        )
+        st.pydeck_chart(r)
+    except StreamlitAPIException:
+        pass
 
 
 if __name__ == "__main__":
