@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  redis:
+    image: redis
+    ports:
+      - "6389:6389"
+    container_name: redis
+
+  fastapi:
+    build: app/
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    container_name: app
+
+  streamlit:
+    build: dashboard/
+    depends_on:
+      - fastapi
+    ports:
+        - "8501:8501"
+    container_name: dashboard

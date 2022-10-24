@@ -1,0 +1,9 @@
+SQLAlchemy~=1.4.42
+fastapi~=0.85.1
+SQLAlchemy-Utils==0.38.3
+streamlit==1.13.0
+google-cloud-bigquery
+jupyter
+redis~=4.3.4
+pandas~=1.5.0
+pydeck~=0.8.0b4
